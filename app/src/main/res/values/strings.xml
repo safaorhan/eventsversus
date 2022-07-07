@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">EventsVersus</string>
+    <string name="ice_cream_sandwich">Ice Cream Sandwich</string>
+    <string name="which_one_is_not">Which one is not a name of an Android version?</string>
+    <string name="cinnamon_candy">Cinnamon Candy</string>
+    <string name="gingerbread">Gingerbread</string>
+    <string name="honeycomb">Honeycomb</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="are_you_sure_you_want_to_exit">You haven\'t answered. Are you sure you want to leave?</string>
+    <string name="correct">Correct!</string>
+    <string name="incorrect">Incorrect!</string>
+    <string name="next">Next</string>
+    <string name="exit">Exit</string>
+</resources>
