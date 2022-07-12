@@ -64,6 +64,10 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
+    // Events & Text
+    implementation 'com.github.safaorhan:events:2.0.0-alpha2'
+    implementation 'com.github.safaorhan:text:1.0.7'
+
     // LiveData Testing
     def arch_version = "2.1.0"
     testImplementation "androidx.arch.core:core-testing:$arch_version"

@@ -1,7 +1,17 @@
 package com.safaorhan.events.versus.home
 
+import androidx.navigation.ActionOnlyNavDirections
 import app.cash.turbine.test
+import com.google.android.material.snackbar.BaseTransientBottomBar.LENGTH_LONG
+import com.safaorhan.events.navigation.NavigationEvent
+import com.safaorhan.events.snackbar.SnackbarEvent
+import com.safaorhan.events.test.TestEvents
+import com.safaorhan.events.toast.ToastEvent
 import com.safaorhan.events.versus.R
+import com.safaorhan.events.versus.events.dialog.AlertDialogEvent
+import com.safaorhan.events.versus.events.sound.SoundEvent
+import com.safaorhan.text.asStringResource
+import com.safaorhan.text.asText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.update
@@ -29,9 +39,12 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
+    // ICS
+
     @Test
     fun `when ics is clicked, should set the answer`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onIceCreamSandwichClicked()
 
@@ -43,33 +56,32 @@ class HomeViewModelTest {
 
     @Test
     fun `when ics is clicked, should play error beep`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onIceCreamSandwichClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().shouldPlaySound).isEqualTo(true)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events).contains(SoundEvent)
     }
 
     @Test
     fun `when ics is clicked, should show toast`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onIceCreamSandwichClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().toastMessage).isEqualTo(R.string.incorrect)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events).contains(
+            ToastEvent(message = R.string.incorrect.asStringResource().asText())
+        )
     }
 
     // Gingerbread
 
     @Test
     fun `when gingerbread is clicked, should set the answer`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onGingerbreadClicked()
 
@@ -81,33 +93,32 @@ class HomeViewModelTest {
 
     @Test
     fun `when gingerbread is clicked, should play error beep`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onGingerbreadClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().shouldPlaySound).isEqualTo(true)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events).contains(SoundEvent)
     }
 
     @Test
     fun `when gingerbread is clicked, should show toast`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onGingerbreadClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().toastMessage).isEqualTo(R.string.incorrect)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events).contains(
+            ToastEvent(message = R.string.incorrect.asStringResource().asText())
+        )
     }
 
     // Honeycomb
 
     @Test
     fun `when honeycomb is clicked, should set the answer`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onHoneycombClicked()
 
@@ -119,33 +130,32 @@ class HomeViewModelTest {
 
     @Test
     fun `when honeycomb is clicked, should play error beep`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onHoneycombClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().shouldPlaySound).isEqualTo(true)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events).contains(SoundEvent)
     }
 
     @Test
     fun `when honeycomb is clicked, should show toast`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onHoneycombClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().toastMessage).isEqualTo(R.string.incorrect)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events).contains(
+            ToastEvent(message = R.string.incorrect.asStringResource().asText())
+        )
     }
 
     // Cinnamon candy
 
     @Test
     fun `when cinnamon candy is clicked, should set the answer`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onCinnamonCandyClicked()
 
@@ -157,34 +167,36 @@ class HomeViewModelTest {
 
     @Test
     fun `when cinnamon candy is clicked, should show snackbar`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onCinnamonCandyClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().snackbarMessage).isEqualTo(R.string.correct)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events.last()).isEqualTo(
+            SnackbarEvent(
+                message = R.string.correct.asStringResource().asText(),
+                duration = LENGTH_LONG
+            )
+        )
     }
 
     // Next Button
 
     @Test
     fun `given answer not set, when next is clicked, should show a dialog`() = runTest(dispatcher) {
-        val viewModel = HomeViewModel()
+        val events = TestEvents()
+        val viewModel = HomeViewModel(events)
 
         viewModel.onNextButtonClicked()
 
-        viewModel.uiState.test {
-            assertThat(awaitItem().shouldShowConfirmationDialog).isEqualTo(true)
-            cancelAndIgnoreRemainingEvents()
-        }
+        assertThat(events.events.last()).isExactlyInstanceOf(AlertDialogEvent::class.java)
     }
 
     @Test
     fun `given answer is set, when next is clicked, should navigate to results`() =
         runTest(dispatcher) {
-            val viewModel = HomeViewModel()
+            val events = TestEvents()
+            val viewModel = HomeViewModel(events)
 
             viewModel.uiState.update {
                 it.copy(answer = "some answer")
@@ -192,9 +204,10 @@ class HomeViewModelTest {
 
             viewModel.onNextButtonClicked()
 
-            viewModel.uiState.test {
-                assertThat(awaitItem().shouldNavigateTo).isEqualTo(R.id.resultFragment)
-                cancelAndIgnoreRemainingEvents()
-            }
+            assertThat(events.events.last()).isEqualTo(
+                NavigationEvent(
+                    ActionOnlyNavDirections(R.id.resultFragment)
+                )
+            )
         }
 }
